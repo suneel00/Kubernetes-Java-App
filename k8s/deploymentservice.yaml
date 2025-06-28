@@ -25,7 +25,7 @@ kind: Service
 metadata:
   name: kubernetes-java-service
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: kubernetes-java
   ports:
