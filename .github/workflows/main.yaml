@@ -56,6 +56,3 @@ jobs:
         fi
         echo "Updating image to $FULL_IMAGE"
         sed -i "s|image: .*|image: $FULL_IMAGE|" k8s/deploymentservice.yaml
-      
-    - name: Deploy to Kubernetes
-      run: kubectl apply -f k8s/deploymentservice.yaml
