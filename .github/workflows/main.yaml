@@ -26,7 +26,9 @@ jobs:
       run: mvn clean install
 
     - name: Log in to Docker Hub
-      run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u suneel00 --password-stdin
+      env:
+        DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
+      run: echo "$DOCKER_PASSWORD" | docker login -u suneel00 --password-stdin
 
     - name: Build and push Docker image
       run: |
@@ -35,15 +37,18 @@ jobs:
 
     - name: Set up kubectl
       uses: azure/setup-kubectl@v3
+      with:
+        version: 'latest'
 
     - name: Configure kubeconfig
+      env:
+        KUBECONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
       run: |
         mkdir -p ~/.kube
-        echo "${{ secrets.KUBE_CONFIG_DATA }}" | base64 -d > ~/.kube/config
+        echo "$KUBECONFIG_DATA" | base64 -d > ~/.kube/config
 
-    - name: Update image in manifest (optional)
-      run: |
-        sed -i "s|image: .*|image: ${IMAGE_NAME}:${{ github.run_number }}|" k8s/deploymentservice.yaml
+    - name: Update image in manifest
+      run: sed -i "s|image: .*|image: ${IMAGE_NAME}:${{ github.run_number }}|" k8s/deploymentservice.yaml
 
     - name: Deploy to Kubernetes
       run: kubectl apply -f k8s/deploymentservice.yaml
