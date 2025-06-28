@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: kubernetes-java
-          image: suneel00/kubernetes:local
+          image: suneel00/kubernetes:latest
           imagePullPolicy: Never
           ports:
             - containerPort: 8080
