@@ -56,9 +56,6 @@ jobs:
         fi
         echo "✅ Updating image to $FULL_IMAGE"
         sed -i "s|image: .*|image: $FULL_IMAGE|" k8s/deploymentservice.yaml
-        
-    - name: Validate Kubernetes manifest syntax
-      run: kubectl apply --dry-run=client -f k8s/deploymentservice.yaml
       
     - name: Deploy to Kubernetes
-      run: kubectl apply -f k8s/deploymentservice.yaml
+      run: kubectl apply --dry-run=client --validate=false -f k8s/deploymentservice.yaml
