@@ -51,11 +51,11 @@ jobs:
       run: |
         FULL_IMAGE=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}
         if [[ -n "$FULL_IMAGE" && "$FULL_IMAGE" != *:* ]]; then
-          echo "❌ Invalid image tag detected: $FULL_IMAGE"
+          echo "Invalid image tag detected: $FULL_IMAGE"
           exit 1
         fi
-        echo "✅ Updating image to $FULL_IMAGE"
+        echo "Updating image to $FULL_IMAGE"
         sed -i "s|image: .*|image: $FULL_IMAGE|" k8s/deploymentservice.yaml
       
     - name: Deploy to Kubernetes
-      run: kubectl apply --dry-run=client --validate=false -f k8s/deploymentservice.yaml
+      run: kubectl apply -f k8s/deploymentservice.yaml
