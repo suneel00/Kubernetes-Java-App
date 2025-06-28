@@ -48,7 +48,10 @@ jobs:
         echo "$KUBECONFIG_DATA" | base64 -d > ~/.kube/config
 
     - name: Update image in manifest
-      run: sed -i "s|image: .*|image: ${IMAGE_NAME}:${{ github.run_number }}|" k8s/deploymentservice.yaml
+      env:
+        IMAGE_TAG: ${{ env.IMAGE_NAME }}:${{ github.run_number }}
+      run: |
+        sed -i "s|image: .*|image: $IMAGE_TAG|" k8s/deploymentservice.yaml
 
     - name: Deploy to Kubernetes
       run: kubectl apply -f k8s/deploymentservice.yaml
